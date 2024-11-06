@@ -16,7 +16,8 @@ Sokoban::Sokoban(const std::string& filename) : levelFilename(filename) {
 }
 
 void Sokoban::reset() {
-    loadLevel(levelFilename);  // Reloads the original level
+    loadLevel(levelFilename);
+    gameClock.restart();
 }
 
 void Sokoban::loadTextures() {  // Load textures

@@ -27,6 +27,7 @@ class Sokoban : public sf::Drawable {
     unsigned int width() const;
 
     sf::Vector2u playerLoc() const;
+    sf::Clock& getGameClock() { return gameClock; }
 
     bool isWon() const;
 
@@ -40,8 +41,10 @@ class Sokoban : public sf::Drawable {
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
  private:
-    void loadTextures();
     std::string levelFilename;
+    sf::Clock gameClock;
+
+    void loadTextures();
     void loadLevel(const std::string& filename);
 
     std::map<std::string, sf::Texture> textures;

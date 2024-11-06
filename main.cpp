@@ -53,10 +53,10 @@ int main(int argc, char* argv[]) {
             if (event.type == sf::Event::Closed)
                 window.close();
             if (event.type == sf::Event::KeyPressed) {
-            if (event.key.code == sf::Keyboard::Up) game.movePlayer(SB::Direction::Up);
-            else if (event.key.code == sf::Keyboard::Down) game.movePlayer(SB::Direction::Down);
-            else if (event.key.code == sf::Keyboard::Left) game.movePlayer(SB::Direction::Left);
-            else if (event.key.code == sf::Keyboard::Right) game.movePlayer(SB::Direction::Right);
+            if (event.key.code == sf::Keyboard::Up || event.key.code == sf::Keyboard::W) game.movePlayer(SB::Direction::Up);
+            else if (event.key.code == sf::Keyboard::Down || event.key.code == sf::Keyboard::S) game.movePlayer(SB::Direction::Down);
+            else if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::A) game.movePlayer(SB::Direction::Left);
+            else if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::D) game.movePlayer(SB::Direction::Right);
             else if (event.key.code == sf::Keyboard::R) game.reset();
             
             if (game.isWon()) {
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        sf::Time elapsed = clock.getElapsedTime();  // Get the elapsed time
+        sf::Time elapsed = game.getGameClock().getElapsedTime();  // Get the elapsed time
         int seconds = static_cast<int>(elapsed.asSeconds());
         int minutes = seconds / 60;
         seconds %= 60;
