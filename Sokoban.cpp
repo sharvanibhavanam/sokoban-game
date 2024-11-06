@@ -74,16 +74,21 @@ void Sokoban::movePlayer(Direction dir) {
 
     if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight) {
         char nextCell = grid[newY][newX];
-        if (nextCell == '.' || nextCell == 'a') {  // Check if the player can move
+
+        if (nextCell == '.' || nextCell == 'a') {
             playerPosition = {static_cast<unsigned>(newX), static_cast<unsigned>(newY)};
-        } else if (nextCell == 'A') {  // Check if the player can push a box
+        } else if (nextCell == 'A' || nextCell == '1') {
             unsigned int boxNewX = newX + dx;
             unsigned int boxNewY = newY + dy;
-            if (boxNewX >= 0 && boxNewX < gridWidth && boxNewY >= 0 && boxNewY < gridHeight &&
-                (grid[boxNewY][boxNewX] == '.' || grid[boxNewY][boxNewY] == 'a')) {
-                grid[newY][newX] = '.';  // Move box and player
-                grid[boxNewY][boxNewX] = 'A';
-                playerPosition = {static_cast<unsigned>(newX), static_cast<unsigned>(newY)};
+            if (boxNewX >= 0 && boxNewX < gridWidth && boxNewY >= 0 && boxNewY < gridHeight) {
+                char nextBoxCell = grid[boxNewY][boxNewX];
+
+                if (nextBoxCell == '.' || nextBoxCell == 'a') {
+                    grid[newY][newX] = (nextCell == '1') ? 'a' : '.';
+
+                    grid[boxNewY][boxNewX] = (nextBoxCell == 'a') ? '1' : 'A';
+                    playerPosition = {static_cast<unsigned>(newX), static_cast<unsigned>(newY)};
+                }
             }
         }
     }
