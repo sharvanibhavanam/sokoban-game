@@ -55,10 +55,50 @@ unsigned int Sokoban::pixelWidth() const { return gridWidth * TILE_SIZE; }
 
 sf::Vector2u Sokoban::playerLoc() const { return playerPosition; }
 
-bool Sokoban::isWon() const {
-    // in part B
-    return false;
+bool Sokoban::isWon() const{
+    std::vector<sf::Vector2u> boxPositions;
+    std::vector<sf::Vector2u> storagePositions;
+
+    // Collect all box and storage positions
+    for (unsigned int y = 0; y < gridHeight; ++y) {
+        for (unsigned int x = 0; x < gridWidth; ++x) {
+            if (grid[y][x] == 'A') {
+                boxPositions.emplace_back(x, y);
+            } else if (grid[y][x] == 'a') {
+                storagePositions.emplace_back(x, y);
+            }
+        }
+    }
+
+    // Sort box and storage positions for direct comparison
+    auto positionCompare = [](const sf::Vector2u& lhs, const sf::Vector2u& rhs) {
+        return (lhs.x == rhs.x) ? (lhs.y < rhs.y) : (lhs.x < rhs.x);
+    };
+
+    std::sort(boxPositions.begin(), boxPositions.end(), positionCompare);
+    std::sort(storagePositions.begin(), storagePositions.end(), positionCompare);
+
+    // Determine if the game is won based on counts and positions
+    if (storagePositions.size() > boxPositions.size()) {
+        // More storage spaces than boxes: check if each box aligns with a storage position
+        for (size_t i = 0; i < boxPositions.size(); ++i) {
+            if (boxPositions[i] != storagePositions[i]) {
+                return false;  // A box is not in the correct position
+            }
+        }
+    } else {
+        // Equal or fewer storage spaces than boxes: verify all storage spaces are filled
+        for (size_t i = 0; i < storagePositions.size(); ++i) {
+            if (boxPositions[i] != storagePositions[i]) {
+                return false;  // A storage space is not filled by a box
+            }
+        }
+    }
+
+    // If all conditions are satisfied, the game is won
+    return true;
 }
+
 
 void Sokoban::movePlayer(Direction dir) {
     int dx = 0, dy = 0;

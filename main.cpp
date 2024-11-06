@@ -36,7 +36,15 @@ int main(int argc, char* argv[]) {
     elapsedTimeText.setFillColor(sf::Color::White);
     elapsedTimeText.setPosition(10, windowHeight - 40);
 
+    sf::Text winText;
+    winText.setFont(font);
+    winText.setString("Congratulations, you won!");
+    winText.setCharacterSize(30);
+    winText.setFillColor(sf::Color::Green);
+    winText.setPosition(windowWidth / 2 - winText.getGlobalBounds().width / 2, windowHeight / 2);
+
     sf::Clock clock;
+    bool gameWon = false;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -48,6 +56,10 @@ int main(int argc, char* argv[]) {
             else if (event.key.code == sf::Keyboard::Down) game.movePlayer(SB::Direction::Down);
             else if (event.key.code == sf::Keyboard::Left) game.movePlayer(SB::Direction::Left);
             else if (event.key.code == sf::Keyboard::Right) game.movePlayer(SB::Direction::Right);
+            
+            if (game.isWon()) {
+                    gameWon = true;
+                }
             }
         }
 
@@ -66,6 +78,10 @@ int main(int argc, char* argv[]) {
         window.draw(game);
 
         window.draw(elapsedTimeText);
+
+        if (gameWon) {
+            window.draw(winText);
+        }
 
         window.display();
     }
