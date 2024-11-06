@@ -41,6 +41,7 @@ class Sokoban : public sf::Drawable {
 
  private:
     void loadTextures();
+    std::string levelFilename;
     void loadLevel(const std::string& filename);
 
     std::map<std::string, sf::Texture> textures;

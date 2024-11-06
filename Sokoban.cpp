@@ -10,9 +10,13 @@ Sokoban::Sokoban() {
     loadTextures();
 }
 
-Sokoban::Sokoban(const std::string& filename) {
+Sokoban::Sokoban(const std::string& filename) : levelFilename(filename) {
     loadTextures();
-    loadLevel(filename);
+    loadLevel(levelFilename);
+}
+
+void Sokoban::reset() {
+    loadLevel(levelFilename);  // Reloads the original level
 }
 
 void Sokoban::loadTextures() {  // Load textures
@@ -69,6 +73,7 @@ bool Sokoban::isWon() const{
             }
         }
     }
+
 
     // Sort box and storage positions for direct comparison
     auto positionCompare = [](const sf::Vector2u& lhs, const sf::Vector2u& rhs) {
