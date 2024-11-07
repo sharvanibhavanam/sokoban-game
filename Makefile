@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = --std=c++20 -Wall -Werror -pedantic -g
-LIB = -lboost_unit_test_framework -lsfml-graphics -lsfml-window -lsfml-system
+LIB = -lboost_unit_test_framework -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # Your .hpp files (header dependencies)
 DEPS = Sokoban.hpp

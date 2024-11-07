@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 namespace SB {
 enum class Direction {
@@ -28,6 +29,11 @@ class Sokoban : public sf::Drawable {
 
     sf::Vector2u playerLoc() const;
     sf::Clock& getGameClock() { return gameClock; }
+    
+
+   const sf::Vector2u& boxLoc(size_t index) const {
+        return boxes[index];
+   }
 
     bool isWon() const;
 
@@ -49,6 +55,9 @@ class Sokoban : public sf::Drawable {
 
     std::map<std::string, sf::Texture> textures;
     std::vector<std::vector<char>> grid;
+
+    std::vector<sf::Vector2u> boxes;
+
     unsigned int gridHeight = 0;
     unsigned int gridWidth = 0;
     sf::Vector2u playerPosition;
