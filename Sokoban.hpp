@@ -6,22 +6,29 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <stack>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+
 namespace SB {
 enum class Direction { Up, Down, Left, Right };
+
+struct GameState {
+    sf::Vector2u playerPos;
+    std::vector<std::vector<char>> grid;
+};
 
 class Sokoban : public sf::Drawable {
  public:
   static const int TILE_SIZE = 64;
 
   Sokoban();
-  explicit Sokoban(const std::string&);  // Optional
+  explicit Sokoban(const std::string&);
 
-  unsigned int pixelHeight() const;  // Optional
-  unsigned int pixelWidth() const;   // Optional
+  unsigned int pixelHeight() const;
+  unsigned int pixelWidth() const;
 
   unsigned int height() const;
   unsigned int width() const;
@@ -36,8 +43,12 @@ class Sokoban : public sf::Drawable {
   void movePlayer(Direction dir);
   void reset();
 
-  void undo();  // Optional extra credit
-  void redo();  // Optional extra credit
+  void undo();
+  void redo();
+
+  void playVictorySound();
+  sf::Music backgroundMusic;
+  void playBackgroundSound();
 
  protected:
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -57,6 +68,16 @@ class Sokoban : public sf::Drawable {
   unsigned int gridHeight = 0;
   unsigned int gridWidth = 0;
   sf::Vector2u pos;
+
+  std::stack<GameState> undoStack;
+  std::stack<GameState> redoStack;
+
+  sf::SoundBuffer victorySoundBuffer;
+  sf::Sound victorySound;
+
+  sf::Texture* currentPlayerTexture;
+
+  void saveState();
 
   friend std::ostream& operator<<(std::ostream& out, const Sokoban& s);
   friend std::istream& operator>>(std::istream& in, Sokoban& s);

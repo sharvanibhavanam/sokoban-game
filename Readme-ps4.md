@@ -28,12 +28,21 @@ I did not use any lambda functions or utilize algorithms library.
 I made sure to check the grid is drawn properly, and the player moves only in open spots. I don't think there are any issues with my code.
 
 ### Extra Credit
-I added a timer at the bottom of my screen using sf::Clock to start a timer when the game begins. I then made a function to keep track of the time. I also downloaded a font to display the time onto the screen.
+1. I added a timer at the bottom of my screen using sf::Clock to start a timer when the game begins. I then made a function to keep track of the time. I also downloaded a font to display the time onto the screen.
+2. I added undo and redo functions. I utilized stacks to save the current and previous states. I also used a struct to store player's position and grid level layout in the state.
+3. Added a victory sound upon winning the game that uses the SFML audio library. I loaded an audio file into my constructor and used a function to play the audio.
+4. Added background music using SFML audio module. I loaded an audio file into my constructor and made sure the music plays continuously without conflicting with the victory audio.
 
 ## Acknowledgements
 
-https://www.deefont.com/arial-font/
+1.font from https://www.deefont.com/arial-font/
 
-Kenney Sokoban Pack (CC0): https://kenney.nl/assets/sokoban
+2. images from Kenney Sokoban Pack (CC0): https://kenney.nl/assets/sokoban
 
-Minesweeper and connect4 games implemented during class
+3. used sample levels provided in sokoban.zip on blackboard
+
+3. background audio from https://pixabay.com/music/search/game%20background/
+
+4. victory audio from https://pixabay.com/sound-effects/search/victory/
+
+5. used Minesweeper and connect4 games implemented during class for reference
