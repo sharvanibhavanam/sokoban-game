@@ -3,6 +3,7 @@
 #include "Sokoban.hpp"
 #include <fstream>
 #include <algorithm>
+#include <string>
 
 namespace SB {
 
@@ -46,62 +47,54 @@ void Sokoban::loadLevel(const std::string& filename) {
             for (unsigned int x = 0; x < gridWidth; ++x) {
                 file >> grid[y][x];
                 if (grid[y][x] == '@') {
-                    playerPosition = {x, y};
+                    pos = {x, y};
                 }
             }
         }
 }
 
-unsigned int Sokoban::height() const { return gridHeight; }  // Getters for grid dimensions
+unsigned int Sokoban::height() const { return gridHeight; }
 unsigned int Sokoban::width() const { return gridWidth; }
 
 unsigned int Sokoban::pixelHeight() const { return gridHeight * TILE_SIZE; }
 unsigned int Sokoban::pixelWidth() const { return gridWidth * TILE_SIZE; }
 
-sf::Vector2u Sokoban::playerLoc() const { return playerPosition; }
+sf::Vector2u Sokoban::playerLoc() const { return pos; }
 
-bool Sokoban::isWon() const{
-    std::vector<sf::Vector2u> boxPositions;
-    std::vector<sf::Vector2u> storagePositions;
+bool Sokoban::isWon() const {
+    std::vector<sf::Vector2u> box_pos;
+    std::vector<sf::Vector2u> stor_pos;
 
-    // Collect all box and storage positions
     for (unsigned int y = 0; y < gridHeight; ++y) {
         for (unsigned int x = 0; x < gridWidth; ++x) {
             if (grid[y][x] == 'A') {
-                boxPositions.emplace_back(x, y);
+                box_pos.emplace_back(x, y);
             } else if (grid[y][x] == 'a') {
-                storagePositions.emplace_back(x, y);
+                stor_pos.emplace_back(x, y);
             }
         }
     }
 
-
-    // Sort box and storage positions for direct comparison
-    auto positionCompare = [](const sf::Vector2u& lhs, const sf::Vector2u& rhs) {
+    auto pos_comp = [](const sf::Vector2u& lhs, const sf::Vector2u& rhs) {
         return (lhs.x == rhs.x) ? (lhs.y < rhs.y) : (lhs.x < rhs.x);
     };
 
-    std::sort(boxPositions.begin(), boxPositions.end(), positionCompare);
-    std::sort(storagePositions.begin(), storagePositions.end(), positionCompare);
+    std::sort(box_pos.begin(), box_pos.end(), pos_comp);
+    std::sort(stor_pos.begin(), stor_pos.end(), pos_comp);
 
-    // Determine if the game is won based on counts and positions
-    if (storagePositions.size() > boxPositions.size()) {
-        // More storage spaces than boxes: check if each box aligns with a storage position
-        for (size_t i = 0; i < boxPositions.size(); ++i) {
-            if (boxPositions[i] != storagePositions[i]) {
-                return false;  // A box is not in the correct position
+    if (stor_pos.size() > box_pos.size()) {
+        for (size_t i = 0; i < box_pos.size(); ++i) {
+            if (box_pos[i] != stor_pos[i]) {
+                return false;
             }
         }
     } else {
-        // Equal or fewer storage spaces than boxes: verify all storage spaces are filled
-        for (size_t i = 0; i < storagePositions.size(); ++i) {
-            if (boxPositions[i] != storagePositions[i]) {
-                return false;  // A storage space is not filled by a box
+        for (size_t i = 0; i < stor_pos.size(); ++i) {
+            if (box_pos[i] != stor_pos[i]) {
+                return false;
             }
         }
     }
-
-    // If all conditions are satisfied, the game is won
     return true;
 }
 
@@ -115,25 +108,25 @@ void Sokoban::movePlayer(Direction dir) {
         case Direction::Right: dx = 1; break;
     }
 
-    unsigned int newX = playerPosition.x + dx;
-    unsigned int newY = playerPosition.y + dy;
+    unsigned int X = pos.x + dx;
+    unsigned int Y = pos.y + dy;
 
-    if (newX >= 0 && newX < gridWidth && newY >= 0 && newY < gridHeight) {
-        char nextCell = grid[newY][newX];
+    if (X >= 0 && X < gridWidth && Y >= 0 && Y < gridHeight) {
+        char nextCell = grid[Y][X];
 
         if (nextCell == '.' || nextCell == 'a') {
-            playerPosition = {static_cast<unsigned>(newX), static_cast<unsigned>(newY)};
+            pos = {static_cast<unsigned>(X), static_cast<unsigned>(Y)};
         } else if (nextCell == 'A' || nextCell == '1') {
-            unsigned int boxNewX = newX + dx;
-            unsigned int boxNewY = newY + dy;
-            if (boxNewX >= 0 && boxNewX < gridWidth && boxNewY >= 0 && boxNewY < gridHeight) {
-                char nextBoxCell = grid[boxNewY][boxNewX];
+            unsigned int boX = X + dx;
+            unsigned int boY = Y + dy;
+            if (boX >= 0 && boX < gridWidth && boY >= 0 && boY < gridHeight) {
+                char nextCell = grid[boY][boX];
 
-                if (nextBoxCell == '.' || nextBoxCell == 'a') {
-                    grid[newY][newX] = (nextCell == '1') ? 'a' : '.';
+                if (nextCell == '.' || nextCell == 'a') {
+                    grid[Y][X] = (nextCell == '1') ? 'a' : '.';
 
-                    grid[boxNewY][boxNewX] = (nextBoxCell == 'a') ? '1' : 'A';
-                    playerPosition = {static_cast<unsigned>(newX), static_cast<unsigned>(newY)};
+                    grid[boY][boX] = (nextCell == 'a') ? '1' : 'A';
+                    pos = {static_cast<unsigned>(X), static_cast<unsigned>(Y)};
                 }
             }
         }
@@ -171,7 +164,7 @@ void Sokoban::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 
     sprite.setTexture(textures.at("player"));  // Draw player
-    sprite.setPosition(playerPosition.x * TILE_SIZE, playerPosition.y * TILE_SIZE);
+    sprite.setPosition(pos.x * TILE_SIZE, pos.y * TILE_SIZE);
     target.draw(sprite, states);
 }
 
@@ -193,7 +186,7 @@ std::istream& operator>>(std::istream& in, Sokoban& s) {
         for (unsigned int x = 0; x < s.gridWidth; ++x) {
             in >> s.grid[y][x];
             if (s.grid[y][x] == '@') {
-                s.playerPosition = {static_cast<unsigned>(x), static_cast<unsigned>(y)};
+                s.pos = {static_cast<unsigned>(x), static_cast<unsigned>(y)};
             }
         }
     }
