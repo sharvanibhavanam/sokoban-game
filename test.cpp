@@ -54,4 +54,8 @@ BOOST_AUTO_TEST_CASE(testMoveLeft) {
 
     BOOST_REQUIRE_EQUAL(PlayerPs.x, _newgame.playerLoc().x);
     BOOST_REQUIRE_EQUAL(PlayerPs.y, _newgame.playerLoc().y);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c0dd697 (new 11/8)
