@@ -37,7 +37,7 @@ I made sure to check the grid is drawn properly, and the player moves only in op
 
 1.font from https://www.deefont.com/arial-font/
 
-2. images from Kenney Sokoban Pack (CC0): https://kenney.nl/assets/sokoban
+2. www.kenney.nl
 
 3. used sample levels provided in sokoban.zip on blackboard
 

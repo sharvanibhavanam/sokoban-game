@@ -3,7 +3,6 @@
 #include "Sokoban.hpp"
 #include <fstream>
 #include <algorithm>
-#include <string>
 
 namespace SB {
 
