@@ -66,10 +66,17 @@ int main(int argc, char* argv[]) {
             game.movePlayer(SB::Direction::Right);
         } else if (key == sf::Keyboard::R) {
             game.reset();
+            gameWon = false;
+        } else if (key == sf::Keyboard::Z) {
+            game.undo();
+        } else if (key == sf::Keyboard::Y) {
+            game.redo();
         }
 
-        if (game.isWon()) {
+        if (!gameWon && game.isWon()) {
             gameWon = true;
+            game.playVictorySound();
+            game.playBackgroundSound();
         }
     }
 }
